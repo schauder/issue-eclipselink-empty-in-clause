@@ -34,7 +34,7 @@ public class SampleDataJpaApplicationTests {
 		SimpleEntity entity = new SimpleEntity();
 		entity.setId(23L);
 		em.persist(entity);
-
+		em.flush();
 	}
 
 	@Test
