@@ -38,8 +38,19 @@ public class SampleDataJpaApplicationTests {
 	}
 
 	@Test
-	public void getIdFromSimpleEntity() {
-		ManagedType<SimpleEntity> managedType = em.getMetamodel().managedType(SimpleEntity.class);
+	public void storeEntityWithNestedIdClass() {
+
+		Table2 t2 = new Table2();
+		t2.id1 = "21";
+		t2.id2 = "22";
+
+		Table1 t1 = new Table1();
+		t1.id = "21";
+		t1.table2 = t2;
+
+		em.persist(t1);
+		em.flush();
+
 	}
 
 

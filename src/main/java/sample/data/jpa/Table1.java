@@ -15,6 +15,7 @@
  */
 package sample.data.jpa;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -29,6 +30,6 @@ public class Table1 implements Serializable {
 	String id;
 
 	@Id
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	Table2 table2;
 }
