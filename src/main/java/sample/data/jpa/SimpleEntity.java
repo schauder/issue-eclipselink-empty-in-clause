@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package sample.data.jpa.service;
+package sample.data.jpa;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.Repository;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
-import sample.data.jpa.domain.Hotel;
-import sample.data.jpa.domain.Review;
+@Entity
+public class SimpleEntity {
 
-interface ReviewRepository extends Repository<Review, Long> {
+	private static final long serialVersionUID = 1L;
 
-	Page<Review> findByHotel(Hotel hotel, Pageable pageable);
+	public Long getId() {
+		return id;
+	}
 
-	Review findByHotelAndIndex(Hotel hotel, int index);
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-	Review save(Review review);
-
+	@Id
+	private Long id;
 }

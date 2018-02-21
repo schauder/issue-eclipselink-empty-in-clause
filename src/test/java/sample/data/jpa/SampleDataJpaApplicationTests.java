@@ -1,20 +1,16 @@
 package sample.data.jpa;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.metamodel.ManagedType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Integration test to run the application.
@@ -23,25 +19,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SampleDataJpaApplication.class)
-@WebAppConfiguration
-@ActiveProfiles("scratch")
-// Separate profile for web tests to avoid clashing databases
+@Transactional
 public class SampleDataJpaApplicationTests {
 
 	@Autowired
-	private WebApplicationContext context;
+	EntityManager em;
 
-	private MockMvc mvc;
-
-	@Before
-	public void setUp() {
-		this.mvc = MockMvcBuilders.webAppContextSetup(this.context).build();
+	@Test
+	public void contextLoads() {
 	}
 
 	@Test
-	public void testHome() throws Exception {
+	public void storeSimpleEntity() {
+		SimpleEntity entity = new SimpleEntity();
+		entity.setId(23L);
+		em.persist(entity);
 
-		this.mvc.perform(get("/")).andExpect(status().isOk())
-				.andExpect(content().string("Bath"));
 	}
+
+	@Test
+	public void getIdFromSimpleEntity() {
+		ManagedType<SimpleEntity> managedType = em.getMetamodel().managedType(SimpleEntity.class);
+	}
+
+
 }
