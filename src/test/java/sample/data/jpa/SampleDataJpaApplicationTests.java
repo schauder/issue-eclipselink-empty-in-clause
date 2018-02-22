@@ -86,6 +86,10 @@ public class SampleDataJpaApplicationTests {
 		assertFalse(identifiableType.hasSingleIdAttribute());
 	}
 
+	/**
+	 * This one fails, although it shouldn't.
+	 * Difference to {@link #accessIdViaMetadataTable1()} is that it uses {@link Table2} which has an inner class as the idclass.
+	 */
 	@Test
 	public void accessIdViaMetadataTable2() {
 
@@ -96,8 +100,6 @@ public class SampleDataJpaApplicationTests {
 		assertTrue(managedType instanceof IdentifiableType);
 
 		IdentifiableType identifiableType = (IdentifiableType) managedType;
-
-		System.out.println(identifiableType);
 
 		assertFalse(identifiableType.hasSingleIdAttribute());
 	}
@@ -117,6 +119,7 @@ public class SampleDataJpaApplicationTests {
 	}
 
 	@Test
+	// this fails with an exception because the return values from EclipseLink are inconsistent.
 	public void testSD2() {
 
 		JpaEntityInformation<Table2, ?> information = getEntityInformation(
