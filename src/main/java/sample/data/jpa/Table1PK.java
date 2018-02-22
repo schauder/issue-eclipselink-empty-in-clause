@@ -15,19 +15,32 @@
  */
 package sample.data.jpa;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
 import java.io.Serializable;
 
-@Entity
-@IdClass(Table1PK.class)
-public class Table1 implements Serializable {
+/**
+ * @author Jens Schauder
+ */
+public class Table1PK implements Serializable {
 
-	@Id
-	String id;
+	private String id;
 
-	@Id
-	String id2;
+	public String getId2() {
+		return id2;
+	}
+
+	public void setId2(String id2) {
+		this.id2 = id2;
+	}
+
+	private String id2;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 
 }

@@ -58,11 +58,10 @@ public class SampleDataJpaApplicationTests {
 	}
 
 	private Table1 createTable1Instance() {
-		Table2 t2 = createTable2();
 
 		Table1 t1 = new Table1();
 		t1.id = "21";
-		t1.table2 = t2;
+		t1.id2 = "22";
 		return t1;
 	}
 
