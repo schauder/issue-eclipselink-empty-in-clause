@@ -3,6 +3,9 @@ package sample.data.jpa;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,7 +26,7 @@ import static org.springframework.data.jpa.repository.support.JpaEntityInformati
  * @author Oliver Gierke
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SampleDataJpaApplication.class)
+@EnableAutoConfiguration
 @Transactional
 public class SampleDataJpaApplicationTests {
 

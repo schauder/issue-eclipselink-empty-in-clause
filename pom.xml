@@ -48,6 +48,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>2.1.0.DATAJPA-1105-SNAPSHOT</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
