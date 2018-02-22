@@ -19,9 +19,11 @@ package sample.data.jpa;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers;
@@ -38,21 +40,22 @@ import javax.sql.DataSource;
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-public class SampleDataJpaApplication {
+public class SampleDataJpaApplication extends JpaBaseConfiguration {
 
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(SampleDataJpaApplication.class, args);
+	protected SampleDataJpaApplication(DataSource dataSource, JpaProperties properties, ObjectProvider<JtaTransactionManager> jtaTransactionManager, ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
+		super(dataSource, properties, jtaTransactionManager, transactionManagerCustomizers);
 	}
-	
-	@Bean
+
+	@Override
 	protected AbstractJpaVendorAdapter createJpaVendorAdapter() {
-		EclipseLinkJpaVendorAdapter adapter = new EclipseLinkJpaVendorAdapter();
-		return adapter;
+		return new EclipseLinkJpaVendorAdapter();
 	}
 
-	@Bean
+	@Override
 	protected Map<String, Object> getVendorProperties() {
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<>();
+		map.put(PersistenceUnitProperties.WEAVING, "true");
+		map.put(PersistenceUnitProperties.DDL_GENERATION, "drop-and-create-tables");
 		return map;
 	}
 

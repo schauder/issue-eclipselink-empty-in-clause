@@ -23,7 +23,7 @@ import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Entity
-@IdClass(Table1PK.class)
+@IdClass(Table1.Table1PK.class)
 public class Table1 implements Serializable {
 
 	@Id
@@ -32,4 +32,27 @@ public class Table1 implements Serializable {
 	@Id
 	@ManyToOne(cascade = CascadeType.ALL)
 	Table2 table2;
+
+	public static class Table1PK implements Serializable {
+
+		private String id;
+		private Table2.Table2PK table2;
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public Table2.Table2PK getTable2() {
+			return table2;
+		}
+
+		public void setTable2(Table2.Table2PK table2) {
+			this.table2 = table2;
+		}
+
+	}
 }

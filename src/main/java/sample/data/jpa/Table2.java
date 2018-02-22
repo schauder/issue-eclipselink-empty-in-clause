@@ -21,7 +21,7 @@ import javax.persistence.IdClass;
 import java.io.Serializable;
 
 @Entity
-@IdClass(value = Table2PK.class)
+@IdClass(value = Table2.Table2PK.class)
 public class Table2 implements Serializable {
 
 	@Id
@@ -30,4 +30,23 @@ public class Table2 implements Serializable {
 	@Id
 	String id2;
 
+	public static class Table2PK implements Serializable {
+
+		private String id1;
+		private String id2;
+
+		public String getId1() {
+			return id1;
+		}
+		public void setId1(String id1) {
+			this.id1 = id1;
+		}
+
+		public String getId2() {
+			return id2;
+		}
+		public void setId2(String id2) {
+			this.id2 = id2;
+		}
+	}
 }
