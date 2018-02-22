@@ -55,14 +55,19 @@ public class SampleDataJpaApplicationTests {
 	}
 
 	private Table1 createTable1Instance() {
-		Table2 t2 = new Table2();
-		t2.id1 = "21";
-		t2.id2 = "22";
+		Table2 t2 = createTable2();
 
 		Table1 t1 = new Table1();
 		t1.id = "21";
 		t1.table2 = t2;
 		return t1;
+	}
+
+	private Table2 createTable2() {
+		Table2 t2 = new Table2();
+		t2.id1 = "21";
+		t2.id2 = "22";
+		return t2;
 	}
 
 	@Test
@@ -105,6 +110,19 @@ public class SampleDataJpaApplicationTests {
 		Table1 t1 = createTable1Instance();
 
 		Object id = information.getId(t1);
+
+		assertNotNull(id);
+	}
+
+	@Test
+	public void testSD2() {
+
+		JpaEntityInformation<Table2, ?> information = getEntityInformation(
+				Table2.class, em);
+
+		Table2 t2 = createTable2();
+
+		Object id = information.getId(t2);
 
 		assertNotNull(id);
 	}
