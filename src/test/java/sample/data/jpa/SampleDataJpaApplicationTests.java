@@ -1,26 +1,25 @@
 package sample.data.jpa;
 
+import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.support.JpaEntityInformation;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.metamodel.IdentifiableType;
-import javax.persistence.metamodel.ManagedType;
-import javax.persistence.metamodel.Metamodel;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.springframework.data.jpa.repository.support.JpaEntityInformationSupport.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration test to run the application.
@@ -33,102 +32,91 @@ import static org.springframework.data.jpa.repository.support.JpaEntityInformati
 @Transactional
 public class SampleDataJpaApplicationTests {
 
+	private static final String SELECT_WITH_IN_CLAUSE = "SELECT se FROM SimpleEntity se WHERE se.id IN :ids";
+
 	@Autowired
 	EntityManager em;
+
+
+	@Before
+	public void before() {
+		storeEntity(23L);
+		storeEntity(42L);
+
+	}
 
 	@Test
 	public void contextLoads() {
 	}
 
+	// this one fails
 	@Test
-	public void storeSimpleEntity() {
+	public void inWithEmptyList() {
+
+		List result = em.createQuery(SELECT_WITH_IN_CLAUSE)
+				.setParameter("ids", Collections.emptyList())
+				.getResultList();
+
+		assertThat(result).isEmpty();
+	}
+
+	@Test
+	public void inCriteriaApiWithEmptyList() {
+
+		CriteriaQuery<Object> query = createQueryWithInClause();
+
+		List<Object> result = em.createQuery(query)
+				.setParameter("ids", Collections.emptyList())
+				.getResultList();
+
+		assertThat(result).isEmpty();
+	}
+
+	@Test
+	public void inCriteriaApiWithNonEmptyList() {
+
+		CriteriaQuery<Object> query = createQueryWithInClause();
+
+		List<Object> result = em.createQuery(query)
+				.setParameter("ids", Collections.singleton(23L))
+				.getResultList();
+
+		assertThat(result).hasSize(1);
+	}
+
+	@Test
+	public void inWithNonEmptyMatchingList() {
+
+		List result = em.createQuery(SELECT_WITH_IN_CLAUSE)
+				.setParameter("ids", Collections.singleton(23L))
+				.getResultList();
+
+		assertThat(result).hasSize(1);
+	}
+
+	@Test
+	public void inWithNonEmptyNonMatchingList() {
+
+		List result = em.createQuery(SELECT_WITH_IN_CLAUSE)
+				.setParameter("ids", Collections.singleton(43L))
+				.getResultList();
+
+		assertThat(result).isEmpty();
+	}
+
+	private CriteriaQuery<Object> createQueryWithInClause() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Object> query = cb.createQuery();
+		Root<SimpleEntity> root = query.from(SimpleEntity.class);
+		query.select(root).where(root.get("id").in(cb.parameter(Collection.class, "ids")));
+		return query;
+	}
+
+	private void storeEntity(long id) {
 		SimpleEntity entity = new SimpleEntity();
-		entity.setId(23L);
+		entity.setId(id);
 		em.persist(entity);
 		em.flush();
 	}
 
-	@Test
-	public void storeEntityWithNestedIdClass() {
-
-		Table1 t1 = createTable1Instance();
-
-		em.persist(t1);
-		em.flush();
-	}
-
-	private Table1 createTable1Instance() {
-
-		Table1 t1 = new Table1();
-		t1.id = "21";
-		t1.id2 = "22";
-		return t1;
-	}
-
-	private Table2 createTable2() {
-		Table2 t2 = new Table2();
-		t2.id1 = "21";
-		t2.id2 = "22";
-		return t2;
-	}
-
-	@Test
-	public void accessIdViaMetadataTable1() {
-
-		Metamodel metamodel = em.getMetamodel();
-
-		ManagedType<Table1> managedType = metamodel.managedType(Table1.class);
-
-		assertTrue(managedType instanceof IdentifiableType);
-
-		IdentifiableType identifiableType = (IdentifiableType) managedType;
-
-		assertFalse(identifiableType.hasSingleIdAttribute());
-	}
-
-	/**
-	 * This one fails, although it shouldn't.
-	 * Difference to {@link #accessIdViaMetadataTable1()} is that it uses {@link Table2} which has an inner class as the idclass.
-	 */
-	@Test
-	public void accessIdViaMetadataTable2() {
-
-		Metamodel metamodel = em.getMetamodel();
-
-		ManagedType<Table2> managedType = metamodel.managedType(Table2.class);
-
-		assertTrue(managedType instanceof IdentifiableType);
-
-		IdentifiableType identifiableType = (IdentifiableType) managedType;
-
-		assertFalse(identifiableType.hasSingleIdAttribute());
-	}
-
-
-	@Test
-	public void testSD() {
-
-		JpaEntityInformation<Table1, ?> information = getEntityInformation(
-				Table1.class, em);
-
-		Table1 t1 = createTable1Instance();
-
-		Object id = information.getId(t1);
-
-		assertNotNull(id);
-	}
-
-	@Test
-	// this fails with an exception because the return values from EclipseLink are inconsistent.
-	public void testSD2() {
-
-		JpaEntityInformation<Table2, ?> information = getEntityInformation(
-				Table2.class, em);
-
-		Table2 t2 = createTable2();
-
-		Object id = information.getId(t2);
-
-		assertNotNull(id);
-	}
 }

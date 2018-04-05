@@ -1,4 +1,4 @@
-# Reproduces an issue with IdClass annotations referencing inner classes
+# Reproduces an issue with IN-clauses by running the following build:
 
 run 
 
