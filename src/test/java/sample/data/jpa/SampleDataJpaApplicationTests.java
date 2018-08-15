@@ -47,10 +47,6 @@ public class SampleDataJpaApplicationTests {
 		em.getTransaction().rollback();
 	}
 
-	@Test
-	public void contextLoads() {
-	}
-
 	// this one fails
 	@Test
 	public void inWithEmptyList() {

@@ -17,7 +17,6 @@
 package sample.data.jpa;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
