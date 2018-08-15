@@ -1,0 +1,27 @@
+language: java
+
+matrix:
+  include:
+    - env:
+      - eclipselink.version='2.7.3'
+      - hsqldb.version='2.40'
+    - env:
+      - eclipselink.version='2.7.2'
+      - hsqldb.version='2.40'
+
+addons:
+  apt:
+    packages:
+    - oracle-java8-installer
+
+cache:
+  directories:
+    - $HOME/.m2
+
+sudo: false
+
+install: true
+
+script:
+  - "mvn -version"
+  - "mvn clean dependency:list test -Pall-dbs${NO_JACOCO:+',no-jacoco'} -Dsort -U"

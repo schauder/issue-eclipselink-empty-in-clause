@@ -11,6 +11,7 @@
 			<property name="javax.persistence.jdbc.url"    value="jdbc:hsqldb:mem:test" />
 			<property name="javax.persistence.jdbc.user" value="sa" />
 			<property name="javax.persistence.jdbc.password" value="" />
+			<property name="eclipselink.target-database" value="HSQL" />
 
 			<property name="javax.persistence.schema-generation.database.action"
 					  value="drop-and-create"/>
