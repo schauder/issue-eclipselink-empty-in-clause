@@ -30,4 +30,4 @@ install: true
 
 script:
   - "mvn -version"
-  - "mvn clean dependency:list test  -U"
+  - "mvn clean test dependency:list -U -Declipselink.version=${eclipselink.version} -Dhsqldb.version=${hsqldb.version}"
