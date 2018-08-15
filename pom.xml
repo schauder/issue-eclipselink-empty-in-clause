@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.schauderhaft</groupId>
@@ -26,6 +26,35 @@
 		<eclipselink.version>2.7.3</eclipselink.version>
 		<hsqldb.version>2.4.0</hsqldb.version>
 	</properties>
+
+
+	<profiles>
+		<profile>
+			<id>el-273</id>
+			<properties>
+				<eclipselink.version>2.7.3</eclipselink.version>
+			</properties>
+		</profile>
+		<profile>
+			<id>el-272</id>
+			<properties>
+				<eclipselink.version>2.7.2</eclipselink.version>
+			</properties>
+		</profile>
+		<profile>
+			<id>hsql-240</id>
+			<properties>
+				<hsqldb.version>2.4.0</hsqldb.version>
+			</properties>
+		</profile>
+		<profile>
+			<id>hsql-228</id>
+			<properties>
+				<hsqldb.version>2.2.8</hsqldb.version>
+			</properties>
+		</profile>
+	</profiles>
+
 
 	<repositories>
 		<repository>

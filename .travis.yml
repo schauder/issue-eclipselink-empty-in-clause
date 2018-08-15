@@ -2,18 +2,10 @@ language: java
 
 matrix:
   include:
-    - env:
-      - eclipselink-version='2.7.3'
-      - hsqldb-version='2.4.0'
-    - env:
-      - eclipselink-version='2.7.2'
-      - hsqldb-version='2.4.0'
-    - env:
-      - eclipselink-version='2.7.3'
-      - hsqldb-version='2.2.8'
-    - env:
-      - eclipselink-version='2.7.2'
-      - hsqldb-version='2.2.8'
+    - env: PROFILE=el-273,hsql-240
+    - env: PROFILE=el-272,hsql-240
+    - env: PROFILE=el-273,hsql-228
+    - env: PROFILE=el-272,hsql-228
 
 addons:
   apt:
@@ -30,4 +22,4 @@ install: true
 
 script:
   - "mvn -version"
-  - "mvn clean test dependency:list -U -Declipselink.version=${eclipselink-version} -Dhsqldb.version=${hsqldb-version}"
+  - "mvn clean test dependency:list -U -P${PROFILE}"
