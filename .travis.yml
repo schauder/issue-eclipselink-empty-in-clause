@@ -4,10 +4,16 @@ matrix:
   include:
     - env:
       - eclipselink.version='2.7.3'
-      - hsqldb.version='2.40'
+      - hsqldb.version='2.4.0'
     - env:
       - eclipselink.version='2.7.2'
-      - hsqldb.version='2.40'
+      - hsqldb.version='2.4.0'
+    - env:
+      - eclipselink.version='2.7.3'
+      - hsqldb.version='2.2.8'
+    - env:
+      - eclipselink.version='2.7.2'
+      - hsqldb.version='2.4.8'
 
 addons:
   apt:
@@ -24,4 +30,4 @@ install: true
 
 script:
   - "mvn -version"
-  - "mvn clean dependency:list test -Pall-dbs${NO_JACOCO:+',no-jacoco'} -Dsort -U"
+  - "mvn clean dependency:list test  -U"
