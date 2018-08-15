@@ -1,48 +1,50 @@
 package sample.data.jpa;
 
-import org.assertj.core.api.Assertions;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+
 
 /**
  * Integration test to run the application.
  *
  * @author Oliver Gierke
+ * @author Jens Schauder
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@EnableAutoConfiguration
-@ComponentScan
-@Transactional
 public class SampleDataJpaApplicationTests {
 
 	private static final String SELECT_WITH_IN_CLAUSE = "SELECT se FROM SimpleEntity se WHERE se.id IN :ids";
 
-	@Autowired
 	EntityManager em;
 
 
 	@Before
 	public void before() {
+
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("simple");
+		em = emf.createEntityManager();
+		em.getTransaction().begin();
+
 		storeEntity(23L);
 		storeEntity(42L);
+	}
 
+	@After
+	public void after() {
+
+		em.getTransaction().rollback();
 	}
 
 	@Test
@@ -105,14 +107,17 @@ public class SampleDataJpaApplicationTests {
 	}
 
 	private CriteriaQuery<Object> createQueryWithInClause() {
+
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Object> query = cb.createQuery();
 		Root<SimpleEntity> root = query.from(SimpleEntity.class);
 		query.select(root).where(root.get("id").in(cb.parameter(Collection.class, "ids")));
+
 		return query;
 	}
 
 	private void storeEntity(long id) {
+
 		SimpleEntity entity = new SimpleEntity();
 		entity.setId(id);
 		em.persist(entity);
